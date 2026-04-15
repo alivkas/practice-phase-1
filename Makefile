@@ -1,15 +1,9 @@
-APP_EXECUTABLE=./cmd/tool
-
+.PHONY: build lint test clean
 build:
-	GOARCH=amd64 GOOS=darwin go build -o ${APP_EXECUTABLE}-darwin main.go
-	GOARCH=amd64 GOOS=linux go build -o ${APP_EXECUTABLE}-linux main.go
-	GOARCH=amd64 GOOS=windows go build -o ${APP_EXECUTABLE}-windows main.go
-
-run: build
-	./${APP_EXECUTABLE}
-
+	go build -o bin/tool ./cmd/tool
+lint:
+	golangci-lint run ./...
+test:
+	go test -race -v ./...
 clean:
-	go clean
-	rm ${APP_EXECUTABLE}-darwin
- 	rm ${APP_EXECUTABLE}-linux
- 	rm ${APP_EXECUTABLE}-windows
+	rm -rf bin/ *.prof coverage.out
