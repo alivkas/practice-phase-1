@@ -1,0 +1,10 @@
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - gosimple
+    - unused
+    - ineffassign
+run:
+  timeout: 5m
