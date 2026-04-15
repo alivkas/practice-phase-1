@@ -1,0 +1,30 @@
+name: CI for project
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Go
+      uses: actions/setup-go
+
+    - name: Linter
+      uses: golangci/golangci-lint-action
+
+    - name: Test
+      uses: go test -race -v ./cmd/tool
+      
+    - name: Say Hello
+      run: echo "Hello, GitHub Actions! This is my first workflow!"
+      
+    - name: Show date
+      run: date
