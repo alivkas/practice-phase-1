@@ -16,3 +16,6 @@ jobs:
 
     - name: Setup Go
       uses: actions/setup-go@v3
+
+    - name: Goland CI
+      uses: golangci/golangci-lint-action@v3
