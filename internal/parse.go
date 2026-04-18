@@ -3,17 +3,19 @@ package internal
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 )
 
-func ParseJson() ([]any, error) {
-	field := Flags[1]
-	data := ReadFile()
-	var raw []map[string]any
-
-	if err := json.Unmarshal(data, &raw); err != nil {
-		panic(err)
+func GetParsedData(path, field string) []any {
+	parsedData, err := parse(deserialize(path), field)
+	if err != nil {
+		fmt.Printf("FATAL: %v", err)
 	}
 
+	return parsedData
+}
+
+func parse(raw []map[string]any, field string) ([]any, error) {
 	parsedData := make([]any, len(raw))
 
 	for i, m := range raw {
@@ -26,4 +28,15 @@ func ParseJson() ([]any, error) {
 	}
 
 	return parsedData, nil
+}
+
+func deserialize(path string) []map[string]any {
+	data := ReadFile(path)
+	var raw []map[string]any
+
+	if err := json.Unmarshal(data, &raw); err != nil {
+		panic(err)
+	}
+
+	return raw
 }
