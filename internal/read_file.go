@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func ReadFile() string {
+func ReadFile() []byte {
 	file, err := os.Open(Flags[0])
 	if err != nil {
 		panic(err)
@@ -24,5 +24,5 @@ func ReadFile() string {
 		stringData.WriteString(string(data[:n]))
 	}
 
-	return stringData.String()
+	return []byte(stringData.String())
 }
