@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -9,7 +10,8 @@ import (
 func ReadFile(path string) []byte {
 	file, err := os.Open(path)
 	if err != nil {
-		panic(err)
+		fmt.Printf("FATAL: Incorrect path\n")
+		os.Exit(1)
 	}
 	defer file.Close()
 

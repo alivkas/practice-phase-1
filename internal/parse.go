@@ -7,11 +7,17 @@ import (
 	"os"
 )
 
+var (
+	ErrFieldNotFound = errors.New("Field not found")
+)
+
 func GetParsedData(path, field string) []any {
-	raw, err := deserialize(path)
-	parsedData, err := parse(raw, field)
+	parsedData, err := parse(deserialize(path), field)
 	if err != nil {
-		fmt.Printf("FATAL: %v \n", err)
+		if errors.Is(err, ErrFieldNotFound) {
+			fmt.Printf("FATAL: %v \n", err)
+		}
+
 		os.Exit(1)
 	}
 
@@ -26,17 +32,14 @@ func parse(raw []map[string]any, field string) ([]any, error) {
 		if ok {
 			parsedData[i] = val
 		} else {
-			return nil, errors.New("Field not found")
+			return nil, ErrFieldNotFound
 		}
 	}
 
 	return parsedData, nil
 }
 
-func deserialize(path string) ([]map[string]any, error) {
-	if path == "" {
-		return nil, errors.New("Incorrect path")
-	}
+func deserialize(path string) []map[string]any {
 	data := ReadFile(path)
 	var raw []map[string]any
 
@@ -44,5 +47,5 @@ func deserialize(path string) ([]map[string]any, error) {
 		fmt.Printf("FATAL: %v", err)
 	}
 
-	return raw, nil
+	return raw
 }
