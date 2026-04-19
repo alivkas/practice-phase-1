@@ -6,13 +6,6 @@ import (
 )
 
 const (
-	FLAGS_SIZE     = 0
-	FLAGS_CAPACITY = 2
-	INFO           = `
-	-json-path "your-path": путь до JSON файла 
-	-parse "field to parse from JSON": спарсить указанное поле из JSON
-	-version "true": получить информацию о версии утилиты
-`
 	VERSION = "v1.0.0"
 )
 
@@ -25,7 +18,7 @@ func RegisterFlags() CLIFlag {
 	filePath := flag.String("json-path", "", "Path to json to parse")
 	keyWord := flag.String("parse", "", "Value to parse from json")
 	version := flag.Bool("version", false, "utility version")
-	flag.Usage = helpCommand
+	flag.Usage = flag.PrintDefaults
 	flag.Parse()
 
 	return CLIFlag{
@@ -35,19 +28,8 @@ func RegisterFlags() CLIFlag {
 	}
 }
 
-func isFlagPassed(name string) bool {
-	found := false
-	flag.Visit(func(f *flag.Flag) {
-		if f.Name == name {
-			found = true
-		}
-	})
-
-	return found
-}
-
 func Visual(cfg CLIFlag) {
-	if isFlagPassed("version") {
+	if cfg.Version == true {
 		fmt.Printf("JSON Parser %v", VERSION)
 	} else {
 		parsedData := GetParsedData(cfg.Path, cfg.Field)
@@ -63,13 +45,7 @@ func outputTypes(data any) {
 		for _, val := range v {
 			fmt.Printf("%v\n", val)
 		}
-	case any:
-		fmt.Println(v)
 	default:
-		fmt.Println("Unexpected type")
+		fmt.Println(v)
 	}
-}
-
-func helpCommand() {
-	fmt.Print(INFO)
 }

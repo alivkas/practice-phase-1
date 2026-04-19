@@ -4,12 +4,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 )
 
 func GetParsedData(path, field string) []any {
-	parsedData, err := parse(deserialize(path), field)
+	raw, err := deserialize(path)
+	parsedData, err := parse(raw, field)
 	if err != nil {
-		fmt.Printf("FATAL: %v", err)
+		fmt.Printf("FATAL: %v \n", err)
+		os.Exit(1)
 	}
 
 	return parsedData
@@ -30,13 +33,16 @@ func parse(raw []map[string]any, field string) ([]any, error) {
 	return parsedData, nil
 }
 
-func deserialize(path string) []map[string]any {
+func deserialize(path string) ([]map[string]any, error) {
+	if path == "" {
+		return nil, errors.New("Incorrect path")
+	}
 	data := ReadFile(path)
 	var raw []map[string]any
 
 	if err := json.Unmarshal(data, &raw); err != nil {
-		panic(err)
+		fmt.Printf("FATAL: %v", err)
 	}
 
-	return raw
+	return raw, nil
 }
