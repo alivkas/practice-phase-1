@@ -18,7 +18,10 @@ func Serialize(path, field string) []byte {
 }
 
 func Deserialize(path string) []map[string]any {
-	data := ReadFile(path)
+	data, err := ReadFile(path)
+	if err != nil {
+		fmt.Printf("FATAL: %v", err)
+	}
 	var raw []map[string]any
 
 	if err := json.Unmarshal(data, &raw); err != nil {

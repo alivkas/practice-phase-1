@@ -23,7 +23,7 @@ func TestReadFile(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.path, func(t *testing.T) {
 			t.Parallel()
-			result := internal.ReadFile(tt.path)
+			result, _ := internal.ReadFile(tt.path)
 
 			if len(result) != tt.size {
 				t.Errorf("got %v, want %v", len(result), tt.size)

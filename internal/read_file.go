@@ -2,29 +2,13 @@ package internal
 
 import (
 	"fmt"
-	"io"
 	"os"
-	"strings"
 )
 
-func ReadFile(path string) []byte {
-	file, err := os.Open(path)
+func ReadFile(path string) ([]byte, error) {
+	data, err := os.ReadFile(path)
 	if err != nil {
-		fmt.Printf("FATAL: Incorrect path\n")
-		os.Exit(1)
+		return nil, fmt.Errorf("read file: %w", err)
 	}
-	defer file.Close()
-
-	data := make([]byte, 64)
-	var stringData strings.Builder
-
-	for {
-		n, err := file.Read(data)
-		if err == io.EOF {
-			break
-		}
-		stringData.WriteString(string(data[:n]))
-	}
-
-	return []byte(stringData.String())
+	return data, nil
 }
